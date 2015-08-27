@@ -19,7 +19,38 @@ Create a function that takes a selector and:
 */
 function solve() {
   return function (selector) {
-    
+    if(typeof selector !== 'string'){
+      throw new Error();
+    }
+
+    var $element = $(selector);
+    if(!$element.length){
+      throw new Error();
+    }
+    var $buttons = $element.find('.button');
+    $buttons.html('hide');
+    $element.on('click', '.button', function(){
+      var $this = $(this),
+          $node = $this.next();
+      while(!($node.hasClass('content'))){
+        if($node.hasClass('button')){
+          break;
+        }
+        $node = $node.next();
+      }
+      if($node.hasClass('button')){
+        return;
+      }
+
+      if($node.css('display') === 'none'){
+        $this.html('hide');
+        $node.css('display', '');
+      }
+      else{
+        $this.html('show');
+        $node.css('display', 'none');
+      }
+    })
   };
 };
 

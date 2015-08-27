@@ -21,7 +21,23 @@ Create a function that takes a selector and COUNT, then generates inside a UL wi
 
 function solve() {
   return function (selector, count) {
-   
+    if(isNaN(count) || count < 1){
+      throw new Error();
+    }
+    if(typeof count === 'undefined' || typeof selector !=='string'){
+      throw new Error();
+    }
+
+   var $element = $(selector);
+    if($element.length < 0){
+      throw new Error();
+    }
+    var $ul = $('<ul />').addClass('items-list');
+
+    for(var i=0; i < count; i+=1){
+      $('<li />').addClass('list-item').html('List item #' + i).appendTo($ul);
+    }
+    $element.html($ul);
   };
 };
 

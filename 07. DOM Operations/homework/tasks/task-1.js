@@ -17,8 +17,42 @@ Create a function that takes an id or DOM element and an array of contents
     * In that case, the content of the element **must not be** changed   
 */
 
-module.exports = function () {
-
+//module.exports = function () {
+function solve(){
   return function (element, contents) {
+    if(typeof element === 'string'){
+      element = document.getElementById(element);
+    }
+    if(typeof element === 'undefined' || typeof contents === 'undefined'){
+      throw new Error();
+    }
+
+    if (!element instanceof(HTMLElement)){
+      throw new Error();
+    }
+    var isArray = function(contents){
+      return contents && typeof contents === 'object' &&
+              typeof contents.length === 'number' &&
+              typeof contents.splice === 'function' &&
+              !(contents.propertyIsEnumerable('length'));
+    };
+
+    if(!isArray(contents)){
+      throw new Error();
+    }
+
+    var templateElement = document.createElement('div'),
+        docFrag = document.createDocumentFragment();
+
+    for(var i = 0; i < contents.length; i+=1){
+      if(typeof contents[i] !== 'string' && typeof contents[i] !== 'number'){
+        throw new Error();
+      }
+      var div = templateElement.cloneNode(true);
+      div.innerHTML = contents[i];
+      docFrag.appendChild(div);
+    }
+    element.innerHTML = '';
+    element.appendChild(docFrag);
   };
-};
+}
